@@ -155,50 +155,16 @@ function render() {
                 const shape = shapes[s]
                 ctx.strokeStyle = 'black'
                 ctx.beginPath()
-                ctx.moveTo(shape['nodes'][0]['x'], shape['nodes'][0]['y'])
+                ctx.moveTo(shape['nodes'][shape['nodes'].length-1]['x'], shape['nodes'][shape['nodes'].length-1]['y'])
                 let area = -1
                 let lastx = -1
                 let lasty = -1
                 let centx = 0
                 let centy = 0
                 for (p in shape['nodes']) {
-                    const point = shape['nodes'][p]
-                    ctx.lineTo(point['x'], point['y'])
-                    if (p > 0) {
-                        const p1 = point
-                        const p2 = shape['nodes'][p-1]
-                        const d = dist(p1, p2)
-                        const mx = (p1['x'] + p2['x']) / 2
-                        const my = (p1['y'] + p2['y']) / 2
-                        if (scale === '') {
-                            drawText(mx + 10, my + 16, round(d, 100), 'black')
-                        } else {
-                            drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale)), 100), 'black')
-                        }
-                    }
-                    if (p > 1) {
-                        const n0 = shape['nodes'][0]
-                        const n1 = shape['nodes'][p-1]
-                        const n2 = shape['nodes'][p]
-                        const side1 = dist(n0, n1)
-                        const side2 = dist(n1, n2)
-                        const newArea = 0.5 * side1 * side2
-                        if (area < 0) {
-                            centx = (n0['x'] + n1['x'] + n2['x']) / 3
-                            centy = (n0['y'] + n1['y'] + n2['y']) / 3
-                            area = newArea
-                        } else {
-                            const newx = (n0['x'] + n1['x'] + n2['x']) / 3
-                            const newy = (n0['y'] + n1['y'] + n2['y']) / 3
-                            centx = weightedAvg(centx, area, newx, newArea)
-                            centy = weightedAvg(centy, area, newy, newArea)
-                            area += newArea
-                        }
-                    }
-                }
-                if (shape['nodes'].length > 1) {
-                    const p1 = shape['nodes'][0]
-                    const p2 = shape['nodes'][shape['nodes'].length-1]
+                    const p1 = shape['nodes'][p]
+                    const p2 = shape['nodes'][p==0?shape['nodes'].length-1:p-1]
+                    ctx.lineTo(p1['x'], p1['y'])
                     const d = dist(p1, p2)
                     const mx = (p1['x'] + p2['x']) / 2
                     const my = (p1['y'] + p2['y']) / 2
@@ -207,6 +173,13 @@ function render() {
                     } else {
                         drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale)), 100), 'black')
                     }
+                    area += 0.5 * (p1['y'] + p2['y']) * (p1['x']-p2['x']) 
+                }
+                for (p in shape['nodes']) {
+                    const p1 = shape['nodes'][p]
+                    const p2 = shape['nodes'][p==0?shape['nodes'].length-1:p-1]
+                    centx += (p1['x']+p2['x']) * ((p1['x']*p2['y']) - (p2['x']*p1['y'])) / (6 * area)
+                    centy += (p1['y']+p2['y']) * ((p1['x']*p2['y']) - (p2['x']*p1['y'])) / (6 * area)
                 }
                 ctx.closePath()
                 ctx.stroke()
