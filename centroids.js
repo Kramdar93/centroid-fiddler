@@ -101,7 +101,7 @@ document.addEventListener('mousemove', (e) => {
             }
         }
         if (nearestDist > 0) {
-            drawBox(nearestX, nearestY)
+            drawBox(nearestX, nearestY, 'green')
         }
     }
 })
@@ -153,6 +153,7 @@ function render() {
         for (s in shapes) {
             if (shapes[s]){
                 const shape = shapes[s]
+                ctx.strokeStyle = 'black'
                 ctx.beginPath()
                 ctx.moveTo(shape['nodes'][0]['x'], shape['nodes'][0]['y'])
                 let area = -1
@@ -170,9 +171,9 @@ function render() {
                         const mx = (p1['x'] + p2['x']) / 2
                         const my = (p1['y'] + p2['y']) / 2
                         if (scale === '') {
-                            drawText(mx, my, round(d))
+                            drawText(mx + 10, my + 16, round(d), 'black')
                         } else {
-                            drawText(mx, my, round(d/Math.sqrt(Number(scale))))
+                            drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale))), 'black')
                         }
                     }
                     if (p > 1) {
@@ -202,9 +203,9 @@ function render() {
                     const mx = (p1['x'] + p2['x']) / 2
                     const my = (p1['y'] + p2['y']) / 2
                     if (scale === '') {
-                        drawText(mx, my, round(d))
+                        drawText(mx + 10, my + 16, round(d), 'black')
                     } else {
-                        drawText(mx, my, round(d/Math.sqrt(Number(scale))))
+                        drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale))), 'black')
                     }
                 }
                 ctx.closePath()
