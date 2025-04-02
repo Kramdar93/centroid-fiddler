@@ -183,6 +183,8 @@ function render() {
                 }
                 ctx.closePath()
                 ctx.stroke()
+
+                area = Math.abs(area)
     
                 if (shape['nodes'].length > 2) {
                     drawBox(centx, centy, 'blue')
