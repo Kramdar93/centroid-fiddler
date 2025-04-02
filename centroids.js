@@ -163,6 +163,18 @@ function render() {
                 for (p in shape['nodes']) {
                     const point = shape['nodes'][p]
                     ctx.lineTo(point['x'], point['y'])
+                    if (p > 0) {
+                        const p1 = point
+                        const p2 = shape['nodes'][p-1]
+                        const d = dist(p1, p2)
+                        const mx = (p1['x'] + p2['x']) / 2
+                        const my = (p1['y'] + p2['y']) / 2
+                        if (scale === '') {
+                            drawText(mx, my, round(d))
+                        } else {
+                            drawText(mx, my, round(d/Math.sqrt(Number(scale))))
+                        }
+                    }
                     if (p > 1) {
                         const n0 = shape['nodes'][0]
                         const n1 = shape['nodes'][p-1]
@@ -183,15 +195,27 @@ function render() {
                         }
                     }
                 }
+                if (shape['nodes'].length > 1) {
+                    const p1 = shape['nodes'][0]
+                    const p2 = shape['nodes'][shape['nodes'].length-1]
+                    const d = dist(p1, p2)
+                    const mx = (p1['x'] + p2['x']) / 2
+                    const my = (p1['y'] + p2['y']) / 2
+                    if (scale === '') {
+                        drawText(mx, my, round(d))
+                    } else {
+                        drawText(mx, my, round(d/Math.sqrt(Number(scale))))
+                    }
+                }
                 ctx.closePath()
                 ctx.stroke()
     
                 if (shape['nodes'].length > 2) {
-                    drawBox(centx, centy)
+                    drawBox(centx, centy, 'blue')
                     if (scale === ''){
-                        drawText(centx + 10, centy + 16, Math.trunc(area))
+                        drawText(centx + 10, centy + 16, round(area), 'blue')
                     } else {
-                        drawText(centx + 10, centy + 16, Math.trunc(area/Number(scale)))
+                        drawText(centx + 10, centy + 16, round(area/Number(scale)), 'blue')
                     }
                     shape['area'] = area
                 }
@@ -203,11 +227,12 @@ function render() {
                     finalx = weightedAvg(finalx, finalArea, centx, area)
                     finaly = weightedAvg(finaly, finalArea, centy, area)
                     finalArea += area
-                    drawBox(finalx, finaly)
+                    drawBox(finalx, finaly, 'blue')
                     if (scale === ''){
-                        drawText(finalx + 10, finaly + 16, Math.trunc(finalArea))
+                        drawText(finalx + 10, finaly + 16, round(finalArea), 'blue')
                     } else {
-                        drawText(finalx + 10, finaly + 16, Math.trunc(finalArea/Number(scale)))
+                        drawText(finalx + 10, finaly + 16, round(finalArea/Number(scale)), 'blue')
+
                     }
                 }
             }
@@ -215,8 +240,11 @@ function render() {
     }
 }
 
-function drawBox(x, y) {
+function drawBox(x, y, color) {
     const ctx = canvas.getContext('2d')
+    if (color) {
+        ctx.strokeStyle = color
+    }
     ctx.beginPath()
     ctx.moveTo(x - 5, y - 5)
     ctx.lineTo(x + 5, y - 5)
@@ -226,9 +254,12 @@ function drawBox(x, y) {
     ctx.stroke()
 }
 
-function drawText(x, y, t) {
+function drawText(x, y, t, color) {
     const ctx = canvas.getContext('2d')
     ctx.font = '12px sans'
+    if (color) {
+        ctx.fillStyle = color
+    }
     ctx.fillText(t, x, y)
 }
 
@@ -263,6 +294,10 @@ function weightedAvg(p1, w1, p2, w2) {
             return p2 - 0.5 * (p2-p1) * (w1/w2)
         }
     }
+}
+
+function round(d) {
+    return Math.trunc(d*10)/10
 }
 
 render()
