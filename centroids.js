@@ -171,9 +171,9 @@ function render() {
                         const mx = (p1['x'] + p2['x']) / 2
                         const my = (p1['y'] + p2['y']) / 2
                         if (scale === '') {
-                            drawText(mx + 10, my + 16, round(d), 'black')
+                            drawText(mx + 10, my + 16, round(d, 100), 'black')
                         } else {
-                            drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale))), 'black')
+                            drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale)), 100), 'black')
                         }
                     }
                     if (p > 1) {
@@ -203,9 +203,9 @@ function render() {
                     const mx = (p1['x'] + p2['x']) / 2
                     const my = (p1['y'] + p2['y']) / 2
                     if (scale === '') {
-                        drawText(mx + 10, my + 16, round(d), 'black')
+                        drawText(mx + 10, my + 16, round(d, 100), 'black')
                     } else {
-                        drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale))), 'black')
+                        drawText(mx + 10, my + 16, round(d/Math.sqrt(Number(scale)), 100), 'black')
                     }
                 }
                 ctx.closePath()
@@ -214,9 +214,9 @@ function render() {
                 if (shape['nodes'].length > 2) {
                     drawBox(centx, centy, 'blue')
                     if (scale === ''){
-                        drawText(centx + 10, centy + 16, round(area), 'blue')
+                        drawText(centx + 10, centy + 16, round(area, 1), 'blue')
                     } else {
-                        drawText(centx + 10, centy + 16, round(area/Number(scale)), 'blue')
+                        drawText(centx + 10, centy + 16, round(area/Number(scale), 1), 'blue')
                     }
                     shape['area'] = area
                 }
@@ -230,9 +230,9 @@ function render() {
                     finalArea += area
                     drawBox(finalx, finaly, 'blue')
                     if (scale === ''){
-                        drawText(finalx + 10, finaly + 16, round(finalArea), 'blue')
+                        drawText(finalx + 10, finaly + 16, round(finalArea, 1), 'blue')
                     } else {
-                        drawText(finalx + 10, finaly + 16, round(finalArea/Number(scale)), 'blue')
+                        drawText(finalx + 10, finaly + 16, round(finalArea/Number(scale), 1), 'blue')
 
                     }
                 }
@@ -297,8 +297,8 @@ function weightedAvg(p1, w1, p2, w2) {
     }
 }
 
-function round(d) {
-    return Math.trunc(d*10)/10
+function round(d, p) {
+    return Math.trunc(d*p)/p
 }
 
 render()
