@@ -27,25 +27,25 @@ document.addEventListener('keydown', (e) => {
             }
             newShape = {"index":index, 'area': 0, 'nodes': []}
             mode = 'add'
-            document.getElementById('mode').innerText = 'add'
+            document.getElementById('mode').innerText = 'Add'
         }
         if (e.key === 'e') {
             targetIndices = []
             mode = 'edit'
-            document.getElementById('mode').innerText = 'edit'
+            document.getElementById('mode').innerText = 'Edit'
         }
         if (e.key === 'd') {
             mode = 'delete'
-            document.getElementById('mode').innerText = 'delete'
+            document.getElementById('mode').innerText = 'Delete'
         }
         if (e.key === 'r') {
             mode = 'reorder'
-            document.getElementById('mode').innerText = 'reorder'
+            document.getElementById('mode').innerText = 'Reorder'
         }
         if (e.key === 's') {
             mode = 'scale'
             scale = ''
-            document.getElementById('mode').innerText = 'scale (pixels/sqft): '
+            document.getElementById('mode').innerText = 'Scale (pixels/sqft): '
         }
     } else if (!e.repeat && (e.key === 'Escape' || e.key === 'Enter')) {
         if (mode === 'add') {
@@ -65,7 +65,7 @@ document.addEventListener('keydown', (e) => {
         }
         render()
         mode = ''
-        document.getElementById('mode').innerText = ''
+        document.getElementById('mode').innerText = '(A)dd (E)dit (D)elete (R)eorder (S)cale'
     } else if (!e.repeat && mode === 'scale') {
         if (e.key.match('\\d')) {
             scale += e.key
@@ -118,11 +118,13 @@ document.addEventListener('click', (e) => {
             'x': x,
             'y': y
         })
+        render()
     } else if (mode === 'delete') {
         shapes[nearestShape]['nodes'].splice(nearestPoint, 1)
         if (shapes[nearestShape]['nodes'].length === 0) {
             shapes.splice(nearestShape, 1)
         }
+        render()
     } else if (mode === 'edit') {
         if (selectedShape < 0) {
             selectedShape = nearestShape
