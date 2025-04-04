@@ -47,6 +47,9 @@ document.addEventListener('keydown', (e) => {
             scale = ''
             document.getElementById('mode').innerText = 'Scale (pixels/sqft): '
         }
+        if (e.key === 'l') {
+            document.getElementById('file-input').click()
+        }
     } else if (!e.repeat && (e.key === 'Escape' || e.key === 'Enter')) {
         if (mode === 'add') {
             if(newShape['nodes'] && newShape['nodes'].length > 0) {
@@ -65,7 +68,7 @@ document.addEventListener('keydown', (e) => {
         }
         render()
         mode = ''
-        document.getElementById('mode').innerText = '(A)dd (E)dit (D)elete (R)eorder (S)cale'
+        document.getElementById('mode').innerText = '(A)dd | (E)dit | (D)elete | (R)eorder | (S)cale | (L)oad image'
     } else if (!e.repeat && mode === 'scale') {
         if (e.key.match('\\d')) {
             scale += e.key
@@ -276,6 +279,18 @@ function weightedAvg(p1, w1, p2, w2) {
 
 function round(d, p) {
     return Math.trunc(d*p)/p
+}
+
+document.getElementById('file-input').onchange = e => {
+    let file = e.target.files[0]
+
+    var reader = new FileReader();
+    reader.onloadend = function(){
+        document.body.style.backgroundImage = "url(" + reader.result + ")";
+    }
+    if(file){
+        reader.readAsDataURL(file);
+    }
 }
 
 render()
